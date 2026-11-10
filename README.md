@@ -1,100 +1,99 @@
 # dsh-claude-delegate
 
-Pacote do bundle: `@dsh-burn-plugins/dsh-claude-delegate`. Licença: [MIT](LICENSE).
+Bundle package: `@dsh-burn-plugins/dsh-claude-delegate`. License: [MIT](LICENSE).
 
-Plugin separado do DeepSeek Harness que expõe **uma** tool, `claude_delegate`:
-delega uma tarefa a uma sessão nova e não assistida do Claude Code, com
-**modelo e effort escolhidos por chamada**.
+Standalone DeepSeek Harness plugin that exposes **one** tool, `claude_delegate`:
+it delegates a task to a fresh, unattended Claude Code session, with
+**model and effort chosen per call**.
 
-Não depende do bundle oficial `@deepseek-ai/dsh-subagent-claude-code`, de
-nenhuma instância fixa de subagente e de nenhum SDK pinado. Fala direto com o
-launcher do Claude Code do host (`claude -p`), que é atualizado pelo próprio
-usuário (`claude update`) — por isso não há versão de SDK para acompanhar.
+It does not depend on the official `@deepseek-ai/dsh-subagent-claude-code` bundle,
+on any fixed subagent instance, or on any pinned SDK. It talks directly to the
+host's Claude Code launcher (`claude -p`), which the user updates themselves
+(`claude update`) — so there is no SDK version to track.
 
-## Como funciona
+## How it works
 
-Cada chamada vira um processo:
+Each call becomes one process:
 
 ```
 claude -p <task> --model <opus|sonnet|haiku> --effort <low|medium|high|xhigh|max> \
        --dangerously-skip-permissions --output-format json --no-session-persistence
 ```
 
-- **Bypass por padrão**; com `readOnly: true` o filho roda com
-  `--permission-mode plan` no lugar de `--dangerously-skip-permissions`
-  (sem edições, sem comandos que exigem aprovação).
-- **`model` e `effort` por chamada**; defaults da config da row.
-- **Assinatura**: variáveis de credencial ambiente (`ANTHROPIC_API_KEY`,
-  `ANTHROPIC_AUTH_TOKEN`, `CLAUDE_CODE_OAUTH_TOKEN`, `CLAUDE_CODE_API_KEY`) são
-  removidas para o login OAuth nativo valer. Desligue com
-  `isolateCredentials: false` e passe a key em `env` se quiser API key.
-- **`CLAUDE_CODE_TMPDIR`** próprio (padrão `~/.cache/claude-delegate`), evitando
-  o problema de `/tmp/claude-$UID` pertencer a outro usuário.
-- cwd = workspace da sessão (ou `cwd` explícito), cancelamento encerra a árvore
-  de processos (SIGTERM → SIGKILL após 3s).
-- Sem timeout embutido: a chamada bloqueia até o filho terminar ou ser cancelada.
+- **Bypass by default**; with `readOnly: true` the child runs with
+  `--permission-mode plan` instead of `--dangerously-skip-permissions`
+  (no edits, no commands that require approval).
+- **`model` and `effort` per call**; defaults come from the row config.
+- **Subscription**: ambient credential variables (`ANTHROPIC_API_KEY`,
+  `ANTHROPIC_AUTH_TOKEN`, `CLAUDE_CODE_OAUTH_TOKEN`, `CLAUDE_CODE_API_KEY`) are
+  removed so the native OAuth login wins. Turn this off with
+  `isolateCredentials: false` and pass the key in `env` if you want to use an API key.
+- Its own **`CLAUDE_CODE_TMPDIR`** (default `~/.cache/claude-delegate`), avoiding
+  the problem of `/tmp/claude-$UID` belonging to another user.
+- cwd = session workspace (or an explicit `cwd`); cancellation tears down the
+  process tree (SIGTERM → SIGKILL after 3s).
+- No built-in timeout: the call blocks until the child exits or is cancelled.
 
-## Instalação
+## Installation
 
-1. Link do pacote no profile (ex.: `~/.dsh/profiles/desktop/package.json`):
+1. Link the package in the profile (e.g. `~/.dsh/profiles/desktop/package.json`):
 
    ```json
-   "@dsh-burn-plugins/dsh-claude-delegate": "link:/caminho/para/dsh-claude-delegate"
+   "@dsh-burn-plugins/dsh-claude-delegate": "link:/path/to/dsh-claude-delegate"
    ```
 
-2. Adicione `@dsh-burn-plugins/dsh-claude-delegate` em `dsh.profile.bundles`.
-3. Rode o `pnpm install` do profile (cria o symlink em `node_modules/@local`).
-4. O HMR recompõe o profile e a tool aparece na próxima requisição do modelo.
+2. Add `@dsh-burn-plugins/dsh-claude-delegate` to `dsh.profile.bundles`.
+3. Run the profile's `pnpm install` (creates the symlink under `node_modules/@local`).
+4. HMR recomposes the profile and the tool appears on the next model request.
 
-## Configuração (row `claude-delegate`)
+## Configuration (row `claude-delegate`)
 
-| campo | padrão | significado |
+| field | default | meaning |
 |---|---|---|
-| `command` | `claude` | launcher estável do Claude Code (use caminho absoluto se o `PATH` do Host tiver wrappers) |
-| `model` | `opus` | alias usado quando a chamada omite `model` |
-| `effort` | `high` | effort usado quando a chamada omite `effort` |
-| `tmpDir` | `""` → `~/.cache/claude-delegate` | exportado como `CLAUDE_CODE_TMPDIR` |
-| `env` | `{}` | env extra por cima do ambiente do host |
-| `timeoutMs` | `0` | limite declarativo por chamada; `0` não limita |
-| `isolateCredentials` | `true` | remove credenciais ambientes para usar a assinatura |
+| `command` | `claude` | stable Claude Code launcher (use an absolute path if the Host `PATH` has wrappers) |
+| `model` | `opus` | alias used when the call omits `model` |
+| `effort` | `high` | effort used when the call omits `effort` |
+| `tmpDir` | `""` → `~/.cache/claude-delegate` | exported as `CLAUDE_CODE_TMPDIR` |
+| `env` | `{}` | extra env layered over the host environment |
+| `timeoutMs` | `0` | declarative per-call limit; `0` does not cap |
+| `isolateCredentials` | `true` | removes ambient credentials so the subscription is used |
 
-O pacote não traz nenhum valor específico de máquina: sem override, todos os
-campos usam o padrão acima. Para personalizar, sobrescreva a row no patch do
-seu profile (ex.: `~/.dsh/profiles/desktop/cordis.patch.yml`), sem editar este
-repositório:
+The package ships no machine-specific value: without an override, every field
+uses the default above. To customize it, override the row in your profile patch
+(e.g. `~/.dsh/profiles/desktop/cordis.patch.yml`), without editing this
+repository:
 
 ```yaml
 - id: claude-delegate
   name: "@dsh-burn-plugins/dsh-claude-delegate"
   config:
-    command: /caminho/absoluto/para/claude
+    command: /absolute/path/to/claude
     model: sonnet
     effort: medium
 ```
 
-O `config` do override substitui o da row por inteiro; os campos omitidos
-voltam ao padrão.
+The override `config` replaces the row's config entirely; omitted fields fall
+back to the defaults.
 
-## Parâmetros da tool
+## Tool parameters
 
-- `task` *(obrigatório)* — tarefa autocontida; o filho não vê a conversa.
-- `model` — `opus` \| `sonnet` \| `haiku` (cada alias resolve para a build mais recente).
-- `effort` — `low` \| `medium` \| `high` \| `xhigh` \| `max` (o modelo pode rebaixar
-  um nível que não suporta).
-- `cwd` — diretório absoluto; omitido = workspace da sessão.
-- `readOnly` — booleano, padrão `false`. Quando `true`, troca
-  `--dangerously-skip-permissions` por `--permission-mode plan` (somente
-  leitura/planejamento; o filho não edita arquivos nem roda comandos que
-  exigem aprovação).
+- `task` *(required)* — self-contained task; the child does not see the conversation.
+- `model` — `opus` \| `sonnet` \| `haiku` (each alias resolves to the latest build).
+- `effort` — `low` \| `medium` \| `high` \| `xhigh` \| `max` (the model may clamp
+  a level it does not support).
+- `cwd` — absolute directory; omitted = session workspace.
+- `readOnly` — boolean, default `false`. When `true`, it swaps
+  `--dangerously-skip-permissions` for `--permission-mode plan` (read-only/planning
+  only; the child neither edits files nor runs commands that require approval).
 
-## Requisitos
+## Requirements
 
-- `claude` instalado e logado no host (assinatura) ou credencial em `env`.
-- Nenhum pacote `@deepseek-ai` de subagente instalado.
+- `claude` installed and logged in on the host (subscription) or a credential in `env`.
+- No `@deepseek-ai` subagent package installed.
 
-## Limitações
+## Limitations
 
-- Execução única: sem continuação, resume, streaming ou contexto do pai.
-- Bloqueante: o agente pai espera o fim da chamada (cancela pela UI).
-- Se `claude update` mudar as flags usadas (`--effort`,
-  `--no-session-persistence`), ajuste o array em `index.js`.
+- Single execution: no continuation, resume, streaming, or parent context.
+- Blocking: the parent agent waits for the call to finish (cancel from the UI).
+- If `claude update` changes the flags used (`--effort`,
+  `--no-session-persistence`), adjust the array in `index.js`.

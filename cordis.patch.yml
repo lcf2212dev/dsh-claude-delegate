@@ -6,7 +6,7 @@
 #
 # To customise it, override the row from your own profile patch
 # (`<profile>/cordis.patch.yml`) instead of editing this file — see the
-# "Configuração" section of the README.
+# "Configuration" section of the README.
 - insert:
     - id: claude-delegate
       name: '@dsh-burn-plugins/dsh-claude-delegate'
