@@ -1,0 +1,13 @@
+# Bundle patch for @local/dsh-claude-delegate.
+#
+# Registers one Host row whose plugin contributes the `claude_delegate` tool.
+# The row ships with no machine-specific settings: every field falls back to
+# its default (`command: claude`, resolved through the Host PATH).
+#
+# To customise it, override the row from your own profile patch
+# (`<profile>/cordis.patch.yml`) instead of editing this file — see the
+# "Configuração" section of the README.
+- insert:
+    - id: claude-delegate
+      name: '@local/dsh-claude-delegate'
+      config: {}

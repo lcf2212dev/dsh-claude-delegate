@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Claude Delegate",
+    "description": "Adds the claude_delegate tool: hand a task to the host Claude Code CLI, choosing model and effort per call."
+  }
+}
