@@ -14,7 +14,8 @@
     "cordis.patch.yml",
     "locale/*.json",
     "icon.svg",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "peerDependencies": {
     "@deepseek-ai/dsh-tools": ">=0.2.2-rc.1",

@@ -1,4 +1,6 @@
-# @local/dsh-claude-delegate
+# dsh-claude-delegate
+
+Pacote do bundle: `@local/dsh-claude-delegate`. Licença: [MIT](LICENSE).
 
 Plugin separado do DeepSeek Harness que expõe **uma** tool, `claude_delegate`:
 delega uma tarefa a uma sessão nova e não assistida do Claude Code, com
