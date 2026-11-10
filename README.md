@@ -1,6 +1,6 @@
 # dsh-claude-delegate
 
-Pacote do bundle: `@local/dsh-claude-delegate`. Licença: [MIT](LICENSE).
+Pacote do bundle: `@dsh-burn-plugins/dsh-claude-delegate`. Licença: [MIT](LICENSE).
 
 Plugin separado do DeepSeek Harness que expõe **uma** tool, `claude_delegate`:
 delega uma tarefa a uma sessão nova e não assistida do Claude Code, com
@@ -39,10 +39,10 @@ claude -p <task> --model <opus|sonnet|haiku> --effort <low|medium|high|xhigh|max
 1. Link do pacote no profile (ex.: `~/.dsh/profiles/desktop/package.json`):
 
    ```json
-   "@local/dsh-claude-delegate": "link:/caminho/para/dsh-claude-delegate"
+   "@dsh-burn-plugins/dsh-claude-delegate": "link:/caminho/para/dsh-claude-delegate"
    ```
 
-2. Adicione `@local/dsh-claude-delegate` em `dsh.profile.bundles`.
+2. Adicione `@dsh-burn-plugins/dsh-claude-delegate` em `dsh.profile.bundles`.
 3. Rode o `pnpm install` do profile (cria o symlink em `node_modules/@local`).
 4. O HMR recompõe o profile e a tool aparece na próxima requisição do modelo.
 
@@ -65,7 +65,7 @@ repositório:
 
 ```yaml
 - id: claude-delegate
-  name: "@local/dsh-claude-delegate"
+  name: "@dsh-burn-plugins/dsh-claude-delegate"
   config:
     command: /caminho/absoluto/para/claude
     model: sonnet

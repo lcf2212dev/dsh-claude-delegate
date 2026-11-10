@@ -1,5 +1,5 @@
 {
-  "name": "@local/dsh-claude-delegate",
+  "name": "@dsh-burn-plugins/dsh-claude-delegate",
   "version": "0.1.0",
   "private": true,
   "type": "module",

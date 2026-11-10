@@ -11,7 +11,7 @@
  * context with the caller. The tool blocks until the child exits and returns
  * only the final answer text.
  *
- * @module @local/dsh-claude-delegate
+ * @module @dsh-burn-plugins/dsh-claude-delegate
  */
 
 import { spawn } from 'node:child_process'

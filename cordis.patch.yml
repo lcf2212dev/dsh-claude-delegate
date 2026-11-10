@@ -1,4 +1,4 @@
-# Bundle patch for @local/dsh-claude-delegate.
+# Bundle patch for @dsh-burn-plugins/dsh-claude-delegate.
 #
 # Registers one Host row whose plugin contributes the `claude_delegate` tool.
 # The row ships with no machine-specific settings: every field falls back to
@@ -9,5 +9,5 @@
 # "Configuração" section of the README.
 - insert:
     - id: claude-delegate
-      name: '@local/dsh-claude-delegate'
+      name: '@dsh-burn-plugins/dsh-claude-delegate'
       config: {}
