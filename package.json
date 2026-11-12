@@ -1,9 +1,9 @@
 {
   "name": "@dsh-burn-plugins/dsh-claude-delegate",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
-  "description": "One claude_delegate tool: per-call model and effort over the host Claude Code CLI (no pinned SDK).",
+  "description": "One claude_delegate tool: per-call model and effort over the host Claude Code CLI (no pinned SDK), kept on the newest build at DSH start.",
   "exports": {
     ".": "./index.js",
     "./locale/*.json": "./locale/*.json",
@@ -11,6 +11,7 @@
   },
   "files": [
     "index.js",
+    "result.js",
     "cordis.patch.yml",
     "locale/*.json",
     "icon.svg",

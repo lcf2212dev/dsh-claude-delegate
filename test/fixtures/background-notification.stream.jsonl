@@ -1,0 +1,9 @@
+{"type": "system", "subtype": "init", "cwd": "/tmp/cd-bg-test", "session_id": "00000000-0000-4000-8000-000000000000"}
+{"type": "assistant", "message": {"id": "msg_1", "type": "message", "role": "assistant", "content": [{"type": "tool_use", "id": "toolu_1", "name": "Bash", "input": {"command": "sleep 12 && echo BG_DONE", "run_in_background": true}}]}}
+{"type": "user", "message": {"role": "user", "content": [{"tool_use_id": "toolu_1", "type": "tool_result", "content": "Command running in background"}]}}
+{"type": "system", "subtype": "task_started", "task_id": "botr1", "run_id": "run-1", "tool_use_id": "toolu_1", "description": "Sleep 12 seconds then echo marker in background"}
+{"type": "assistant", "message": {"id": "msg_2", "type": "message", "role": "assistant", "content": [{"type": "text", "text": "REPORT_MARKER_123"}]}}
+{"type": "result", "subtype": "success", "is_error": false, "num_turns": 1, "result": "REPORT_MARKER_123", "session_id": "00000000-0000-4000-8000-000000000000", "uuid": "u1"}
+{"type": "system", "subtype": "task_notification", "task_id": "botr1", "run_id": "run-1", "tool_use_id": "toolu_1", "status": "completed"}
+{"type": "assistant", "message": {"id": "msg_3", "type": "message", "role": "assistant", "content": [{"type": "text", "text": "O comando em background terminou com sucesso (exit code 0). Não há mais nada pendente."}]}}
+{"type": "result", "subtype": "success", "is_error": false, "num_turns": 1, "result": "O comando em background terminou com sucesso (exit code 0). Não há mais nada pendente.", "session_id": "00000000-0000-4000-8000-000000000000", "uuid": "u2", "origin": {"kind": "task-notification", "producer": "session-task", "runId": "run-1"}}
